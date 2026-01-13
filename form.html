@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+    <style>
+        body {
+            margin: 0px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container form {
+            border: 2px solid black;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            padding: 20px 25px 20px;
+
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px 0px 10px;
+            border-radius: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: blue;
+        }
+
+        .container button {
+            border-radius: 20px;
+            padding: 10px;
+            background: rgb(215, 211, 211);
+            font-weight: bold;
+
+        }
+
+        .container button:hover {
+            background: rgb(111, 111, 111);
+        }
+
+        .buttons {
+            margin-top: 10px;
+        }
+
+        .result {
+            display: flex;
+            border: 2px solid black;
+            height: auto;
+            width: 240px;
+            margin-top: 20px;
+            border-radius: 20px;
+            flex-direction: column;
+            display: none;
+        }
+
+        .result-text {
+            text-align: center;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
+        .result-entry {
+            text-align: center;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            margin-top: top;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form action="">
+            <input type="text" id="name" placeholder="Name">
+
+            <input type="text" id="surname" placeholder="Surname">
+
+            <input type="text" id="address" placeholder="Address">
+
+            <div class="buttons">
+                <button type="button" id="create">Create</button>
+                <button type="button" id="select">Select</button>
+                <button type="button" id="delete">Delete</button>
+            </div>
+        </form>
+        <div class="result" id="div-result">
+            <div id="entry">
+                <!-- Inject data here -->
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function renderResult(result) {
+            document.getElementById("div-result").style.display = 'flex';   
+            document.getElementById("div-result").style.borderColor='green';   
+            if (result?.message) {
+                if (result?.entry) {
+                    document.getElementById("entry").innerHTML = `
+
+                        <p class="result-text">${result.message}</p>
+                        <p class="result-entry">Name: ${result.entry.name}</p>
+                        <p class="result-entry">Surname: ${result.entry.surname}</p>
+                        <p class="result-entry">Address: ${result.entry.address}</p>
+                    `
+                }
+                if(result?.id) {
+                    document.getElementById("entry").innerHTML = `
+                        <p class="result-text">${result.message}</p>
+                        <p class="result-entry">ID: ${result.id}</p>
+                    `
+                }
+            } else if (result?.error) {
+                document.getElementById("entry").innerHTML = `
+                    <p class="result-text" style="color:red;">Error</p>
+                    <p class="result-entry" style="font-weight: bold;">${result.error}</p>
+                    `;
+                document.getElementById("div-result").style.borderColor = "red";
+
+            }
+            
+        }
+
+        document.getElementById("create").addEventListener("click", async (e) => {
+            e.preventDefault();
+            try {
+                const name = document.getElementById("name").value;
+                const address = document.getElementById("address").value;
+                const surname = document.getElementById("surname").value;
+
+                data = {
+                    "name": name,
+                    "surname": surname,
+                    "address": address
+                }
+
+                const response = await fetch("/create", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (result) {
+                    renderResult(result);
+                } else {
+                    alert("Couldn't fetch response");
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        })
+
+        document.getElementById("select").addEventListener("click", async (e) => {
+            e.preventDefault();
+            try {
+                const name = document.getElementById("name").value;
+                const address = document.getElementById("address").value;
+                const surname = document.getElementById("surname").value;
+
+                data = {
+                    "name": name,
+                    "surname": surname,
+                    "address": address
+                }
+
+                const response = await fetch("/select", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (result) {
+                    renderResult(result);
+                } else {
+                    alert("Couldn't fetch response");
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        })
+
+        document.getElementById("delete").addEventListener("click", async (e) => {
+            e.preventDefault();
+            try {
+                const name = document.getElementById("name").value;
+                const address = document.getElementById("address").value;
+                const surname = document.getElementById("surname").value;
+
+                data = {
+                    "name": name,
+                    "surname": surname,
+                    "address": address
+                }
+
+                const response = await fetch("/delete", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (result) {
+                    renderResult(result);
+                } else {
+                    alert("Couldn't fetch response");
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        })
+
+    </script>
+</body>
+
+</html>

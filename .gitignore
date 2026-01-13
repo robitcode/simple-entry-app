@@ -1,0 +1,7 @@
+# Ignore Python compiled files
+__pycache__/
+*.pyc
+
+# Ignore the Database (IMPORTANT: Don't upload your user data)
+*.db
+*.sqlite3
